@@ -57,7 +57,7 @@
 
 				<div class="form-group">
 					<label for="probcode" ><h3>Your Code</h3></label>
-					<textarea name="code"  rows="15" id="codeeditor" class="form-control" placeholder="Enter Code" ></textarea>
+					<textarea name="code"  rows="20" id="codeeditor" class="form-control" placeholder="Enter Code" ></textarea>
 				</div>
 				<div class="form-group">
 					<div class="col-md-5" >
@@ -88,7 +88,7 @@
               			lineNumbers:true,
               			matchBrackets:true,
               			mode:"text/x-"+getlang()
-              			}
+              			};
               		var editor = CodeMirror.fromTextArea(document.getElementById("codeeditor"),config);
               		function getlang()
               		{
