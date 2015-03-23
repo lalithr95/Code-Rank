@@ -168,6 +168,10 @@ class Submit extends CI_Controller
 				// successfully updated error field in submission
 				
 			}
+			else
+			{
+				die("Problem with updating error to database");
+			}
 
 		}
 		else
@@ -178,7 +182,20 @@ class Submit extends CI_Controller
 			//use 2 folder input and output 
 			switch($lang)
 			{
-				
+				case 'c' :
+					// execution should begin with ./prog.out <input.txt 1>output.txt 2>error.txt
+					// Also we need to traverse to the current directory
+					$current = "cd ".$basepath."code/".$sid." ";
+					$current = $current."&& ./".$sid;
+					$current = $current." <".$basepath."testcases/CODE1/LUCKYFOUR/input/1.txt 1>output 2>error";
+					//echo $current;
+					$exec_output = shell_exec($current);
+					//echo $exec_output;
+					echo $current;
+					echo $basepath;
+					// works need to change the path with local variables  
+					break;
+
 			}
 		}
 
@@ -198,4 +215,6 @@ class Submit extends CI_Controller
 			redirect('restricted');
 		}
 	}
+
+
 }
