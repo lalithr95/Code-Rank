@@ -130,7 +130,7 @@ class Submit extends CI_Controller
 				$output = shell_exec("chmod 555 ".$basepath."code/".$sid."/".$sid.$extension);
 				// for changin file to read and execute by group , user , other
 				$command = $compiler['java'];
-				$command = $command.$basepath."code/".$sid."/".$sid.$extension." 2>&1";
+				$command = $command.$basepath."code/".$sid."/program".$extension." 2>&1";
 				$output = shell_exec($command);
 				break;
 			case 'python' :
@@ -195,7 +195,28 @@ class Submit extends CI_Controller
 					echo $basepath;
 					// works need to change the path with local variables  
 					break;
-
+				case 'c++':
+				// for executing c++ program
+					$current = "cd ".$basepath."code/".$sid." ";
+					$current = $current."&& ./".$sid;
+					$current = $current." <".$basepath."testcases/CODE1/LUCKYFOUR/input/1.txt 1>output 2>error";
+					//echo $current;
+					$exec_output = shell_exec($current);
+					//echo $exec_output;
+					echo $current;
+					echo $basepath;
+					break;
+				case 'java':
+					// for executing java program
+					$current = "cd ".$basepath."code/".$sid." ";
+					$current = $current."&& ./".$sid;
+					$current = $current." <".$basepath."testcases/CODE1/LUCKYFOUR/input/1.txt 1>output 2>error";
+					//echo $current;
+					$exec_output = shell_exec($current);
+					//echo $exec_output;
+					echo $current;
+					echo $basepath;
+					break;
 			}
 		}
 
