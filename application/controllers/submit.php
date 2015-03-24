@@ -180,6 +180,8 @@ class Submit extends CI_Controller
 			// run program with test cases
 			// create a folder with problem code and keep test cases in it 
 			//use 2 folder input and output 
+			$prb_code = $code;
+			$contest_code = $this->Admin_contests->getcontestcode($prb_code);
 			switch($lang)
 			{
 				case 'c' :
@@ -187,35 +189,26 @@ class Submit extends CI_Controller
 					// Also we need to traverse to the current directory
 					$current = "cd ".$basepath."code/".$sid." ";
 					$current = $current."&& ./".$sid;
-					$current = $current." <".$basepath."testcases/CODE1/LUCKYFOUR/input/1.txt 1>output 2>error";
+					$current = $current." <".$basepath."testcases/".$contest_code."/".$prb_code."/input/1.txt 1>output 2>error";
 					//echo $current;
 					$exec_output = shell_exec($current);
-					//echo $exec_output;
-					echo $current;
-					echo $basepath;
 					// works need to change the path with local variables  
 					break;
 				case 'c++':
 				// for executing c++ program
 					$current = "cd ".$basepath."code/".$sid." ";
 					$current = $current."&& ./".$sid;
-					$current = $current." <".$basepath."testcases/CODE1/LUCKYFOUR/input/1.txt 1>output 2>error";
+					$current = $current." <".$basepath."testcases/".$contest_code."/".$prb_code."/input/1.txt 1>output 2>error";
 					//echo $current;
 					$exec_output = shell_exec($current);
-					//echo $exec_output;
-					echo $current;
-					echo $basepath;
 					break;
 				case 'java':
 					// for executing java program
 					$current = "cd ".$basepath."code/".$sid." ";
-					$current = $current."&& ./".$sid;
-					$current = $current." <".$basepath."testcases/CODE1/LUCKYFOUR/input/1.txt 1>output 2>error";
+					$current = $current."&& java program";
+					$current = $current." <".$basepath."testcases/".$contest_code."/".$prb_code."/input/1.txt 1>output 2>error";
 					//echo $current;
 					$exec_output = shell_exec($current);
-					//echo $exec_output;
-					echo $current;
-					echo $basepath;
 					break;
 			}
 		}
