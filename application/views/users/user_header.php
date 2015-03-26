@@ -1,5 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
 
-<nav class="navbar navbar-default">
+<head>
+  <title>
+    CodeRank User
+  </title>
+  <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="<?php echo base_url(); ?>css/bootstrap.css">
+    <link rel="stylesheet" href="<?php echo base_url(); ?>css/style.css">
+    <link rel="stylesheet" href="<?php echo base_url(); ?>css/codemirror.css">
+</head>
+<body>
+<nav class="navbar navbar-inverse">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
@@ -41,3 +54,4 @@
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
+

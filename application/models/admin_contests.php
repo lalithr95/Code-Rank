@@ -150,4 +150,10 @@ class Admin_contests extends CI_Model
 		return $query->row();
 
 	}
+
+	public function getproblemcount()
+	{
+		$query = $this->db->get('problem');
+		return $query->num_rows();
+	}
 }

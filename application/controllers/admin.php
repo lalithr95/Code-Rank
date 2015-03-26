@@ -68,7 +68,11 @@ class Admin extends CI_Controller
 		if($this->session->userdata('admin_loggedin'))
 		{
 			$this->session->sess_destroy();
-			redirect('/admin');
+			redirect('admin');
+		}
+		else
+		{
+			redirect('admin');
 		}
 	}
 	public function contests()
@@ -79,7 +83,7 @@ class Admin extends CI_Controller
 			//$this->load->view('admin/test_body');
 			// for now contest is home page so loading admin contests
 
-			$config['base_url'] = "http://localhost/coderank/index.php/admin/contests";
+			$config['base_url'] = base_url()."index.php/admin/contests";
 			$config['per_page'] = 5;
 			$config['total_rows'] = $this->Admin_contests->getcontestcount();
 			//echo $config['total_rows'];
@@ -101,6 +105,11 @@ class Admin extends CI_Controller
   			$config['links'] = $this->pagination->create_links();
   			$this->load->view('admin/test_body',$config);
 
+		}
+		else
+		{
+			redirect('admin');
+			//redirect to login page of admin
 		}
 	}
 	public function add()
@@ -358,6 +367,30 @@ class Admin extends CI_Controller
 		{
 			$this->load->view('users/restricted');
 		}
+	}
+
+	public function problems()
+	{
+		if($this->session->userdata['is_loggedin'])
+		{
+			$this->load->view('users/user_header');
+			// loading user authenticated view
+		}
+		else if($this->session->userdata['admin_loggedin'])
+		{
+			$this->load->view('admin/auth_test');
+			//loading admin authenticated view
+		}
+		else
+		{
+			$this->load->view('users/test');
+		}
+		// function to list all the problems in all contests
+		$config['base_url'] = base_url()."index.php/admin/problems";
+		$config['total_rows'] = $this->Admin_contests->getproblemcount();
+		$config['per_page'] = 5;
+		$config['num_links'] = 5;
+
 	}
 
 }

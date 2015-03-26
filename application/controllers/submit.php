@@ -34,13 +34,13 @@ class Submit extends CI_Controller
 				);
 				// updating submissions for particular problem
 				$this->Submission->setsubmission($code);
-				
+				$language = $this->input->post('lang');
 				if($this->Submission->insertcode($prob_data))
 				{
 					$usercode = $this->input->post('code');
 					$this->load->view('admin/test');
 				
-					$this->run($code,$usercode,$timestamp);
+					$this->run($code,$usercode,$timestamp,$language);
 					
 
 				}
@@ -60,17 +60,40 @@ class Submit extends CI_Controller
 		}
 	}
 
-	public function run($code, $usercode,$timestamp)
+	public function run($code, $usercode,$timestamp,$language)
 	{
 		//used for executing and testing code in sandbox
 		//step 1 : load the code from the DB into sandbox prob
 		$result = $this->Submission->getsid($timestamp);
 		$sid = $result->sid;
 		$basepath = "/opt/lampp/htdocs/coderank/sandbox/";
-		
+		$language = strtolower($language);
+		switch($language)
+		{
+			case 'c':
+				$ext = '.c';
+				break;
+			case 'c++':
+				$ext = '.cpp';
+				break;
+			case 'java':
+				$ext = '.java';
+				break;
+			case 'python':
+				$ext = '.py';
+				break;
+		}
+		// Switch case used to get extension while creating source file for usercode
 		shell_exec("mkdir ".$basepath."code/".$sid);// creates a directory for each problem
 		//shell_exec("chmod 777 ".$basepath."code/".$sid);
-		$fp = fopen($basepath."code/".$sid."/".$sid.".c","w");
+		if($language!='java')
+		{
+			$fp = fopen($basepath."code/".$sid."/".$sid.$ext,"w");
+		}
+		else
+		{
+			$fp = fopen($basepath."code/".$sid."/"."program".$ext,"w");
+		}
 		if($fp)
 		{
 			fwrite($fp,$usercode);
@@ -182,6 +205,7 @@ class Submit extends CI_Controller
 			//use 2 folder input and output 
 			$prb_code = $code;
 			$contest_code = $this->Admin_contests->getcontestcode($prb_code);
+			$contest_code = $contest_code->code;
 			switch($lang)
 			{
 				case 'c' :
@@ -190,7 +214,7 @@ class Submit extends CI_Controller
 					$current = "cd ".$basepath."code/".$sid." ";
 					$current = $current."&& ./".$sid;
 					$current = $current." <".$basepath."testcases/".$contest_code."/".$prb_code."/input/1.txt 1>output 2>error";
-					//echo $current;
+					
 					$exec_output = shell_exec($current);
 					// works need to change the path with local variables  
 					break;
@@ -199,7 +223,7 @@ class Submit extends CI_Controller
 					$current = "cd ".$basepath."code/".$sid." ";
 					$current = $current."&& ./".$sid;
 					$current = $current." <".$basepath."testcases/".$contest_code."/".$prb_code."/input/1.txt 1>output 2>error";
-					//echo $current;
+					
 					$exec_output = shell_exec($current);
 					break;
 				case 'java':
@@ -207,7 +231,7 @@ class Submit extends CI_Controller
 					$current = "cd ".$basepath."code/".$sid." ";
 					$current = $current."&& java program";
 					$current = $current." <".$basepath."testcases/".$contest_code."/".$prb_code."/input/1.txt 1>output 2>error";
-					//echo $current;
+					
 					$exec_output = shell_exec($current);
 					break;
 			}
