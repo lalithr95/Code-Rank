@@ -371,14 +371,14 @@ class Admin extends CI_Controller
 
 	public function problems()
 	{
-		if($this->session->userdata['is_loggedin'])
+		if($this->session->userdata('is_loggedin'))
 		{
 			$this->load->view('users/user_header');
 			// loading user authenticated view
 		}
-		else if($this->session->userdata['admin_loggedin'])
+		else if($this->session->userdata('admin_loggedin'))
 		{
-			$this->load->view('admin/auth_test');
+			$this->load->view('admin/auth_admin');
 			//loading admin authenticated view
 		}
 		else
@@ -390,6 +390,24 @@ class Admin extends CI_Controller
 		$config['total_rows'] = $this->Admin_contests->getproblemcount();
 		$config['per_page'] = 5;
 		$config['num_links'] = 5;
+		$config['num_links'] = 5;
+		$config['full_tag_open'] = '<nav><ul class="pagination">';// for bootstrap pagination tag
+  		$config['full_tag_close'] = '</ul> </nav>';
+  		$config['num_tag_open'] = '<li>';
+  		$config['num_tag_close'] = '</li>';
+  		$config['next_tag_open'] = '<li>';
+  		$config['next_tag_close'] = '</li>';
+  		$config['prev_tag_open'] = '<li>';
+  		$config['prev_tag_close'] = '</li>';
+  		$config['cur_tag_open'] = '<li class="active" ><a href="#">';
+  		$config['cur_tag_close'] = '</a></li>';
+		
+		$config['records'] = $this->Admin_contests->getprobrecords($config['per_page']);
+		$this->pagination->initialize($config); 
+		$config['links'] = $this->pagination->create_links();
+		$this->load->view('problems',$config);
+		// problems view used to list a list of problems
+
 
 	}
 

@@ -156,4 +156,11 @@ class Admin_contests extends CI_Model
 		$query = $this->db->get('problem');
 		return $query->num_rows();
 	}
+
+	public function getprobrecords($offset)
+	{
+		$query = $this->db->get('problem',$offset,$this->uri->segment(3));
+		return $query->result();
+		// uses limit in codeigniter as $offset and 3rd segment of url i.e per page
+	}
 }

@@ -211,32 +211,130 @@ class Submit extends CI_Controller
 				case 'c' :
 					// execution should begin with ./prog.out <input.txt 1>output.txt 2>error.txt
 					// Also we need to traverse to the current directory
-					$current = "cd ".$basepath."code/".$sid." ";
-					$current = $current."&& ./".$sid;
-					$current = $current." <".$basepath."testcases/".$contest_code."/".$prb_code."/input/1.txt 1>output 2>error";
+					// loop for 10 test cases
+					//@testcounter is $i
+					$i = 1;
+					for($i=1;$i<=10;$i++)
+					{
+						$current = "cd ".$basepath."code/".$sid." ";
+						$current = $current."&& ./".$sid;
+						$current = $current." <".$basepath."testcases/".$contest_code."/".$prb_code."/input/".$i.".txt 1>".$i.".out 2>error".$i;
 					
-					$exec_output = shell_exec($current);
+						$exec_output = shell_exec($current);
+					}
+					$this->evaluate($contest_code,$prb_code,$sid);
 					// works need to change the path with local variables  
 					break;
 				case 'c++':
 				// for executing c++ program
-					$current = "cd ".$basepath."code/".$sid." ";
-					$current = $current."&& ./".$sid;
-					$current = $current." <".$basepath."testcases/".$contest_code."/".$prb_code."/input/1.txt 1>output 2>error";
+					// same as C program execution case
+					$i = 1;
+					for($i=1;$i<=10;$i++)
+					{
+						$current = "cd ".$basepath."code/".$sid." ";
+						$current = $current."&& ./".$sid;
+						$current = $current." <".$basepath."testcases/".$contest_code."/".$prb_code."/input/".$i.".txt 1>".$i.".out 2>error".$i;
 					
-					$exec_output = shell_exec($current);
+						$exec_output = shell_exec($current);
+					}
+					$this->evaluate($contest_code,$prb_code,$sid);
 					break;
 				case 'java':
 					// for executing java program
-					$current = "cd ".$basepath."code/".$sid." ";
-					$current = $current."&& java program";
-					$current = $current." <".$basepath."testcases/".$contest_code."/".$prb_code."/input/1.txt 1>output 2>error";
-					
-					$exec_output = shell_exec($current);
+					$i =1;
+					for($i=1;$i<=10;$i++)
+					{
+						$current = "cd ".$basepath."code/".$sid." ";
+						$current = $current."&& java program";
+						$current = $current." <".$basepath."testcases/".$contest_code."/".$prb_code."/input/".$i.".txt 1>".$i.".out 2>error".$i;
+						$exec_output = shell_exec($current);
+					}
+					$this->evaluate($contest_code,$prb_code,$sid);
 					break;
 			}
 		}
 
+	}
+
+	// function for evalutation
+	public function evaluate($contest_code,$prb_code,$sid)
+	{
+		$code_result = array
+		(
+			
+		);
+		$output = "";
+		$code_out = "";
+		$testcase_out = "";
+		// get the details of problem
+		for($i=1;$i<=10;$i++)
+		{
+			$basepath = "/opt/lampp/htdocs/coderank/sandbox/";
+			$code_path = $basepath."code/".$sid."/error".$i;
+			$fp = fopen($code_path,"r");
+			if($fp)
+			{
+				// file descriptor had a success
+				fwrite($fp, $output);
+			}
+			else
+			{
+				die("Unable to open Files! Please check permissions");
+			}
+			if($output)
+			{
+				// Run time error
+				// upon further developement each of array should contain time executed
+				$case = "case";
+				$case = $case.$i;
+				$code_result['result_table'][$i-1] = array
+				(
+					'result' => 'RTE',
+					'score'	=> 0,
+					'error' => 1
+				);
+
+
+			}
+			else
+			{
+				// if executed properly ...checking outputs
+				$code_path = $basepath."code/".$sid."/".$i.".out";
+				$code_fp = fopen($code_path,"r");
+				fwrite($code_fp,$code_out);
+				// For getting actual output
+				$case_path = $basepath."testcases/".$contest_code."/".$prb_code."/output/";
+				$case_path = $case_path.$i.".out";
+				$testcase_fp = fopen($case_path,"r");
+				fwrite($testcase_fp,$testcase_out);
+				// perform a match operation
+				if(strcmp($code_out,$testcase_out) == 0)
+				{
+					$case = "case";
+					$case = $case.$i;
+					$code_result['result_table'][$i-1] = array
+					(
+						'result' => 'AC',
+						'score'	=> 10,
+						'error' => 0
+					);
+				}
+				else
+				{
+					// wrong answer
+					$case = "case";
+					$case = $case.$i;
+					$code_result['result_table'][$i-1] = array
+					(
+						'result' => 'WA',
+						'score'	=> 0,
+						'error' => 0
+					);
+				}
+			}
+		}
+
+		$this->load->view('submit/results_table',$code_result);
 	}
 
 	public function view($sid = NULL)
